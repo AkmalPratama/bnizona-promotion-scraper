@@ -1,0 +1,24 @@
+{
+  "name": "bnizona-promotion-scraper",
+  "version": "1.0.0",
+  "description": "Credit card promotion scraper for BNI Zona",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AkmalPratama/bnizona-promotion-scraper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AkmalPratama/bnizona-promotion-scraper/issues"
+  },
+  "homepage": "https://github.com/AkmalPratama/bnizona-promotion-scraper#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "cheerio": "^1.0.0-rc.2",
+    "request": "^2.85.0"
+  }
+}
