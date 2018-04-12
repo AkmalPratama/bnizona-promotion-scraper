@@ -1,7 +1,6 @@
 var request =  require('request-promise');
 var cheerio = require('cheerio');
 var Promise = require('bluebird');
-var target = require('./target');
 
 var scrapeCategory = function(url) {
     return request(url).then(function(result) {
@@ -14,7 +13,9 @@ var scrapeCategory = function(url) {
             });
         });
         return categoryList;
-    })
+    }).catch(function(err) {
+        return Promise.reject(err);
+    });
 }
 
 var scrapePromo = function(category) {
@@ -31,7 +32,7 @@ var scrapePromo = function(category) {
                 'link': $(promo).attr('href')
             });
         });
-        return Promise.map(promoList, getDetail).then(function(result) {
+        return Promise.map(promoList, scrapeDetail).then(function(result) {
             var categoryDetail = {};
             categoryDetail[category.title] = JSON.stringify(result);
             return categoryDetail;
@@ -39,7 +40,7 @@ var scrapePromo = function(category) {
     });
 }
 
-var getDetail = function(promo) {
+var scrapeDetail = function(promo) {
     return request(promo.link).then(function(result) {
         var detail = {}
         var $ = cheerio.load(result);
@@ -53,8 +54,15 @@ var getDetail = function(promo) {
     });
 }
 
+var scrapeAll = function(url) {
+    return scrapeCategory(url).then(function(category) {
+        return Promise.map(category, scrapePromo);
+    });
+}
+
 module.exports = {
-    scrapeCategory: scrapeCategory;
-    scrapePromo : scrapePromo;
-    getDetail: getDetail
-};
+    scrapeCategory: scrapeCategory,
+    scrapePromo: scrapePromo,
+    scrapeDetail: scrapeDetail,
+    scrapeAll: scrapeAll
+}
